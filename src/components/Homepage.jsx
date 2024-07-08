@@ -2,7 +2,7 @@ import React from 'react'
 import logo from "D:\\projects\\ChatApplication\\src\\assets\\logo.jpg"
 const Homepage = () => {
   return (
-    <div className="container flex justify-center w-screen mx-auto my-64 ">
+    <div className="container flex justify-center w-screen items-center h-screen mx-auto ">
         <div className="left mx-20  w-1/3" >
             <img src={logo} alt="" className="w-60"/>
             <p className=" mx-8 text-2xl ">Chatroom helps you connect with people for short lived conversations .</p>

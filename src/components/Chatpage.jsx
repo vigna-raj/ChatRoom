@@ -1,17 +1,27 @@
-import React, { useRef, useState } from 'react'
+import React, { useEffect, useRef, useState } from 'react'
 import logo from "D:\\projects\\ChatApplication\\src\\assets\\logo1.jpg"
 import { useParams } from 'react-router-dom'
-
+import { io } from "socket.io-client";
 const Chatpage = () => {
+  const socket = io("http://localhost:3000");
   const param=useParams();
   const msgRef=useRef();
+  const messagesEndRef=useRef();
   const [messages,setMessages]=useState([]);
   const sendMSG=()=>{
-    console.log(msgRef.current.value);
-    setMessages([...messages,{sender:"You",msg: msgRef.current.value}]);
+    socket.emit("123",{sender:"something",msg: msgRef.current.value});
     msgRef.current.value="";
     
   }
+  useEffect(()=>{
+    socket.on("13",(payload)=>{
+      setMessages((prevMessages) => [...prevMessages, payload]);
+    })
+    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    return () => {
+      socket.off("13");
+    };
+  },[]);
   return (
     <div className='bg-gray-700'>
     <div className="navbar fixed w-full flex justify-between space-x-5 px-20 py-3 bg-white">
@@ -30,7 +40,7 @@ const Chatpage = () => {
     </div>
     <div className='outline flex justify-center align-middle h-screen pt-16'>
       <div className='my-12 bg-gray-800 w-1/2 h-auto flex flex-col rounded-md pt-5 px-4 pb-2 text-white '>
-        <div className="messages flex-grow overflow-auto">
+        <div className="messages overflow-auto max-h-full flex flex-col flex-grow" ref={messagesEndRef}>
             {messages.map((obj,id)=>{
               return <div key={id} > 
                   <div className='sender '> {obj.sender}</div>
