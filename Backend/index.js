@@ -12,8 +12,11 @@ const io = new Server(httpServer, {
 
 io.on("connection", (socket) => {
 
-    socket.on("123", (payload) => {
-        io.emit("13", payload)
+    socket.on("room", (room) => {
+        socket.join(room);
+    })
+    socket.on("message", (payload) => {
+        io.to(payload.roomID).emit(payload.message);
     })
 });
 

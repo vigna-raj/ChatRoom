@@ -1,27 +1,36 @@
-import React, { useEffect, useRef, useState } from 'react'
-import logo from "D:\\projects\\ChatApplication\\src\\assets\\logo1.jpg"
-import { useParams } from 'react-router-dom'
+import React, { useEffect, useRef, useState } from 'react';
+import { useParams } from 'react-router-dom';
 import { io } from "socket.io-client";
+import logo from "D:\\projects\\ChatApplication\\src\\assets\\logo1.jpg";
+
 const Chatpage = () => {
-  const socket = io("http://localhost:3000");
-  const param=useParams();
-  const msgRef=useRef();
-  const messagesEndRef=useRef();
-  const [messages,setMessages]=useState([]);
-  const sendMSG=()=>{
-    socket.emit("123",{sender:"something",msg: msgRef.current.value});
-    msgRef.current.value="";
+  const socket = useRef(null);
+  const [messages, setMessages] = useState([]);
+  const messagesEndRef = useRef(null);
+  const msgRef = useRef(null);
+  const param = useParams();
+
+  const sendMSG = () => {
+    if (msgRef.current.value.trim()) {
+      socket.current.emit("123", { sender: "something", msg: msgRef.current.value });
+      msgRef.current.value = "";
+    }
+  };
+  
+  useEffect(() => {
+    socket.current = io("http://localhost:3000");
     
-  }
-  useEffect(()=>{
-    socket.on("13",(payload)=>{
+    socket.current.on("123", (payload) => {
       setMessages((prevMessages) => [...prevMessages, payload]);
-    })
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+    });
+
     return () => {
-      socket.off("13");
+      socket.current.off("123");
+      socket.current.disconnect();
     };
-  },[]);
+  }, []);
+
+
   return (
     <div className='bg-gray-700'>
     <div className="navbar fixed w-full flex justify-between space-x-5 px-20 py-3 bg-white">
