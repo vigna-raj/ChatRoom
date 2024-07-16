@@ -1,32 +1,32 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { io } from "socket.io-client";
 import logo from "D:\\projects\\ChatApplication\\src\\assets\\logo1.jpg";
-
-const Chatpage = () => {
-  const socket = useRef(null);
+import { useNavigate } from 'react-router-dom';
+const Chatpage = ({socket}) => {
   const [messages, setMessages] = useState([]);
   const messagesEndRef = useRef(null);
   const msgRef = useRef(null);
   const param = useParams();
-
+  const navigate=useNavigate();
   const sendMSG = () => {
     if (msgRef.current.value.trim()) {
-      socket.current.emit("123", { sender: "something", msg: msgRef.current.value });
+      socket.emit("message", { roomID:param.roomid ,sender: "something", msg: msgRef.current.value });
       msgRef.current.value = "";
     }
   };
+
+  const leaveRoom=()=>{
+    navigate("/");
+  }
   
   useEffect(() => {
-    socket.current = io("http://localhost:3000");
     
-    socket.current.on("123", (payload) => {
+    socket.on("incoming", (payload) => {
       setMessages((prevMessages) => [...prevMessages, payload]);
     });
 
     return () => {
-      socket.current.off("123");
-      socket.current.disconnect();
+      socket.off("incoming");
     };
   }, []);
 
@@ -44,7 +44,7 @@ const Chatpage = () => {
         <img src={logo} alt="" className="w-28"/>
         </div>
         <div className="right flex space-x-2">
-            <button className="signup rounded-full bg-red-500 py-1 text-white p-2 hover:bg-red-700">Exit Room</button>    
+            <button onClick={leaveRoom} className="signup rounded-full bg-red-500 py-1 text-white p-2 hover:bg-red-700">Exit Room</button>    
         </div>
     </div>
     <div className='outline flex justify-center align-middle h-screen pt-16'>
