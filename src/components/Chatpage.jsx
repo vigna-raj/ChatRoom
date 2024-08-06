@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import logo from "D:\\projects\\ChatApplication\\src\\assets\\logo1.jpg";
+import logo from "../assets/logo1.jpg";
 import { useNavigate } from 'react-router-dom';
 const Chatpage = ({socket}) => {
   const [messages, setMessages] = useState([]);
@@ -10,7 +10,7 @@ const Chatpage = ({socket}) => {
   const navigate=useNavigate();
   const sendMSG = () => {
     if (msgRef.current.value.trim()) {
-      socket.emit("message", { roomID:param.roomid ,sender: "something", msg: msgRef.current.value });
+      socket.emit("message", { roomID:param.roomid ,sender:param.uname, msg: msgRef.current.value });
       msgRef.current.value = "";
     }
   };

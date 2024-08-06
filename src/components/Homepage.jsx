@@ -1,5 +1,5 @@
 import React, { useRef } from 'react'
-import logo from "D:\\projects\\ChatApplication\\src\\assets\\logo.jpg"
+import logo from "../assets/logo.jpg"
 import data from "../../rooms.json"
 import { useNavigate } from 'react-router-dom'
 const Homepage = ({socket}) => {
@@ -13,7 +13,6 @@ const Homepage = ({socket}) => {
       if(data.roomids.find((rooms)=>{return rooms==id})) continue;
       roomid.current.value=id;
       socket.emit("createroom",{id});
-      console.log("hi")
       break;
     }
   }
@@ -27,7 +26,7 @@ const Homepage = ({socket}) => {
     }
     else{
       socket.emit("joinRoom",{room:roomid.current.value});
-      navigate(`chat/${roomid.current.value}`);
+      navigate(`chat/${roomid.current.value}/${name.current.value}`);
     }
   }
   return (

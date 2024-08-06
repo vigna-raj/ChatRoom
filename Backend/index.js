@@ -19,15 +19,9 @@ io.on("connection", (socket) => {
         fs.writeFileSync("../rooms.json", JSON.stringify(data));
     })
     socket.on("joinRoom", (room) => {
-        console.log(room)
         socket.join(room.room);
-        // socket.join("abc");
-        console.log("hello")
-
     })
     socket.on("message", (payload) => {
-        // console.log(payload.message)
-
         io.to(payload.roomID).emit("incoming", payload);
     })
 });
